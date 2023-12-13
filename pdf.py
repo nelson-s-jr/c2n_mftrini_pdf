@@ -3,6 +3,23 @@ import os
 import openpyxl
 from time import time
 from math import ceil
+import shutil
+from tkinter import messagebox, filedialog, ttk
+
+def backup_excel(caminho_planilha):
+    nome_backup = os.path.basename(caminho_planilha).replace(".xlsm", "_BACKUP.xlsm")
+    diretorio_backup = os.path.join(os.path.dirname(caminho_planilha), "BACKUP")
+    caminho_backup = os.path.join(diretorio_backup, nome_backup)
+  
+
+    if not os.path.isdir(diretorio_backup):
+        os.mkdir(diretorio_backup)
+        print("pasta criada")
+    else:
+        print("pasta ja existente")
+
+    shutil.copy2(caminho_planilha, caminho_backup)
+
 
 
 def print_process_time(tempo, num_fichas):
@@ -21,17 +38,16 @@ def print_process_time(tempo, num_fichas):
 
 
 try:
+        
+    pasta_pdf = filedialog.askdirectory(title="Escolha a pasta com os resultados da C2N a serem salvos")
+    pasta_pdf = rf"{pasta_pdf}"
     
-    pasta_pdf = str(input('Informe o caminho dos arquivos pdf: ')).strip()
+    caminho_planilha = filedialog.askopenfilename(title="Selecione a planilha da C2N a ser preenchida")
+    caminho_planilha = rf"{caminho_planilha}"
+
     
-    caminho_planilha = str(input('Informe o caminho da planilha: ')).strip()
-    
-    if '"' in caminho_planilha:
-        caminho_planilha = caminho_planilha.strip('"')
-    if '"' in pasta_pdf:
-        pasta_pdf = pasta_pdf.strip('"')
-    
-    
+    backup_excel(caminho_planilha)
+
     inicio = time()
     resultados = {}
     contador = 0
@@ -65,6 +81,10 @@ try:
                 if posicao_negative != -1:
                     print(f"O resultado da ficha {ficha} é NEGATIVO.")
                     resultados[ficha] = 'NEGATIVO'
+
+                if posicao_negative == -1 and posicao_positive == -1:
+                    print(f"Verificar manualmente a ficha {ficha}.")
+                    resultados[ficha] = 'VERIFICAR'
     
     wb = openpyxl.load_workbook(caminho_planilha, keep_vba=True)
     
@@ -109,4 +129,4 @@ try:
 except Exception as erro:
     print(f'Houve o erro {erro}')
 
-input('Pressione ENTER para encerrar o programa')
+input('Programa encerrado.')
