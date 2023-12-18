@@ -163,8 +163,10 @@ try:
     fracao_fetal_column = headers['FRAÇÃO FETAL']
     
     if ficha_column:
-        for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=sheet[ficha_column][0].column,
-                                   max_col=sheet.max_column):
+        for row in reversed(list(sheet.iter_rows(min_row=2, max_row=sheet.max_row, 
+                                                 min_col=sheet[ficha_column][0].column,
+                                                    max_col=sheet.max_column))):
+            
             chave = str(row[0].value)  # Convertendo para string para garantir a correspondência
             if chave in resultados:
                 print(f"Preenchendo as informações correspondentes da ficha {chave}")
@@ -174,6 +176,7 @@ try:
                 sheet[f'{result_column}{row[0].row}'] = resultado
                 sheet[f'{aneuploidias_column}{row[0].row}'] = aneuploidias
                 sheet[f'{fracao_fetal_column}{row[0].row}'] = fracao_fetal
+                
     
     # Salvar as alterações no arquivo Excel
     print('\nSalvando alterações na planilha\n')
