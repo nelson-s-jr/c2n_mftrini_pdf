@@ -160,6 +160,7 @@ tempo_total = fim - inicio
 
 print_process_time(tempo_total, contador_pdf)
 
+
 input('Pressione ENTER para encerrar o programa.')
 
 

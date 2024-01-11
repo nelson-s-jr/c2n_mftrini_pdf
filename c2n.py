@@ -85,6 +85,7 @@ try:
                     print(f"Verificar manualmente a ficha {ficha}.")
                     resultados[ficha] = 'VERIFICAR'
     
+    
     wb = openpyxl.load_workbook(caminho_planilha, keep_vba=True)
     
     # Seleciona a aba na planilha
